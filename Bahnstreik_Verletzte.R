@@ -16,8 +16,9 @@ data$Date <- as.Date(data$Date,format="%d-%m-%Y")
 data$Jahr <- factor(format(data$Date,format="%Y"))
 data$Monat <- factor(format(data$Date,format="%m"))
 data$Tag <- factor(format(data$Date,format="%d"))
+data$Wochentag <- ordered(weekdays(data$Date),levels=c("Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag","Sonntag"))
 
-#2. Daten zu den Streiktagen (Selbst zusammengetrage)
+#2. Daten zu den Streiktagen (Selbst zusammengetragen)
 
 Streiktage <- read.csv2(file="/Users/Jan/Documents/GitHub/Bahnstreik/Streiktage.csv",col.names="Datum",stringsAsFactors=FALSE)
 Streiktage$Datum <- as.Date(Streiktage$Datum, format="%d.%m.%y")
@@ -29,3 +30,12 @@ for (i in seq_along(data$Date)) {
     data$Streiktag[i] <- "Streik"
   } else {data$Streiktag[i] <- "kein Streik"}
 }
+
+#3. Daten in Prädiktions-, Test-, und Trainingset aufteilen
+
+data <- anti_join(data,data[data$Monat=="02"&data$Tag=="29"],by="Date") #entfernt den 29. Februar in Schaltjahren
+
+Streik.data <- data[data$Streiktag=="Streik",]
+data <- data[data$Streiktag=="kein Streik",]
+Training.data <- 
+Test.data <- 
